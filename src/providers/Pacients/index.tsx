@@ -43,6 +43,8 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
 
 
 
+
+
       });
 
       await getAllPacients();
