@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "format": "prettier src/**/*.{tsx,ts} --write --config ./.prettierrc"
+    "format": "prettier src/**/*.{tsx,ts} --write --config ./.prettierrc",
+    "prepare": "husky install"
   },
   "dependencies": {
     "antd": "^5.7.0",
@@ -37,13 +38,15 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.0"
   },
-  "husky": {
-    "hooks": {
-         "pre-commit": "yarn lint && yarn format"
-    }
-  },
-  "lint-staged": {
-    "*.+(ts|tsx)": ["eslint --fix", "git add"],
-    "*.+(json|css|md)": ["prettier --write", "git add"]
-  }
+
+  // "lint-staged": {
+  //   "*": [
+  //     "yarn format",
+  //     "git add"
+  //   ],
+  //   "*.+(json|css|md)": [
+  //     "prettier --write",
+  //     "git add"
+  //   ]
+  // }
 }

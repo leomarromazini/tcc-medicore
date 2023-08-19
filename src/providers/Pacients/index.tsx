@@ -39,12 +39,6 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
         type: 'success',
         tittle: 'Nova Conta criada',
         description: 'Parabéns, conta criada com sucesso!',
-
-
-
-
-
-
       });
 
       await getAllPacients();
@@ -57,9 +51,12 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
           'CNPJ, Matrícula Bemol e e-mail devem ser únicos ou verifique a conexão',
       });
       return false;
+
+
+
     }
   };
-
+  //"eslint --fix",
   const getAllPacients = useCallback(async () => {
     try {
       const result: AxiosResponse<Pacient[]> = await api.get(
