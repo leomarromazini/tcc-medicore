@@ -51,9 +51,6 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
           'CNPJ, Matrícula Bemol e e-mail devem ser únicos ou verifique a conexão',
       });
       return false;
-
-
-
     }
   };
   //"eslint --fix",
@@ -70,19 +67,19 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const getPacientMedicine = useCallback(async () => {
-    try {
-      const result: AxiosResponse<Pacient[]> = await api.get(
-        '/paciente/listar-pacientes',
-      );
-      const pacients = result.data;
-      console.log(result);
+  // const getPacientMedicine = useCallback(async () => {
+  //   try {
+  //     const result: AxiosResponse<Pacient[]> = await api.get(
+  //       '/paciente/listar-pacientes',
+  //     );
+  //     const pacients = result.data;
+  //     console.log(result);
 
-      setPacients(pacients);
-    } catch (e) {
-      console.log('oi', e);
-    }
-  }, []);
+  //     setPacients(pacients);
+  //   } catch (e) {
+  //     console.log('oi', e);
+  //   }
+  // }, []);
 
   const getHospitalizationHistory = useCallback(async (name: string) => {
     try {

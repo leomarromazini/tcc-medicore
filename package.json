@@ -40,10 +40,9 @@
   },
   "lint-staged": {
     "*.+(ts|tsx)": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix --max-warnings 0"
     ],
-    "*.+(json|css|md)": [
+    "*.+(json|md)": [
       "prettier --write",
       "git add"
     ]
