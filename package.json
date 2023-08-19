@@ -38,15 +38,14 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.0"
   },
-
-  // "lint-staged": {
-  //   "*": [
-  //     "yarn format",
-  //     "git add"
-  //   ],
-  //   "*.+(json|css|md)": [
-  //     "prettier --write",
-  //     "git add"
-  //   ]
-  // }
+  "lint-staged": {
+    "*.+(ts|tsx)": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.+(json|css|md)": [
+      "prettier --write",
+      "git add"
+    ]
+  }
 }
