@@ -39,6 +39,10 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
         type: 'success',
         tittle: 'Nova Conta criada',
         description: 'Parabéns, conta criada com sucesso!',
+
+
+
+
       });
 
       await getAllPacients();
