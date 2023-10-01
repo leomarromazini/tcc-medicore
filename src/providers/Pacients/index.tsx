@@ -177,7 +177,7 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
         );
         return result.data;
       } catch (e) {
-        console.log('oi', e);
+        //
       }
     },
     [headers],
@@ -185,8 +185,6 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
 
   const addPacientMedicine = useCallback(
     async (newMedicines: AddMedicines) => {
-      console.log(newMedicines);
-
       try {
         await api.post(`/medicamentos/salvar`, newMedicines, headers);
       } catch (e) {
@@ -208,7 +206,6 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
         );
       } catch (e) {
         //
-        console.log(e);
       }
     },
     [headers],
@@ -247,7 +244,6 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
       );
       return formatedData;
     } catch (e) {
-      console.log('oi', e);
       return null;
     }
   }, []);

@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { DateTime } from 'luxon';
 
 export const handleIsValidDate = (values: {
   formattedValue: string;
@@ -13,7 +13,7 @@ export const handleIsValidDate = (values: {
   }
 
   if (d.length >= 2) {
-    if (!dayjs(`${d[0]}${d[1]}-12-2024`, 'DD-MM-YYYY', true).isValid()) {
+    if (!DateTime.fromFormat(`${d[0]}${d[1]}-12-2024`, 'dd-MM-yyyy').isValid) {
       return false;
     }
   }
@@ -23,7 +23,10 @@ export const handleIsValidDate = (values: {
     }
   }
   if (d.length >= 4) {
-    if (!dayjs(`${d[0]}${d[1]}-${d[2]}${d[3]}-2024`, 'DD-MM-YYYY', true).isValid()) {
+    if (
+      !DateTime.fromFormat(`${d[0]}${d[1]}-${d[2]}${d[3]}-2024`, 'dd-MM-yyyy')
+        .isValid
+    ) {
       return false;
     }
   }
@@ -34,7 +37,8 @@ export const handleIsValidDate = (values: {
   }
   if (d.length === 6) {
     const isFutureDate =
-      dayjs(fD.slice(0, 8) + '00', 'DD/MM/YYYY', true).diff(dayjs()) > 0
+      DateTime.fromFormat(fD.slice(0, 8) + '00', 'dd/MM/yyyy') >
+      DateTime.now().setLocale('pt-BR')
         ? true
         : false;
 
@@ -43,7 +47,8 @@ export const handleIsValidDate = (values: {
 
   if (d.length === 7) {
     const isFutureDate =
-      dayjs(fD.slice(0, 9) + '0', 'DD/MM/YYYY', true).diff(dayjs()) > 0
+      DateTime.fromFormat(fD.slice(0, 9) + '0', 'dd/MM/yyyy') >
+      DateTime.now().setLocale('pt-BR')
         ? true
         : false;
 
@@ -52,7 +57,10 @@ export const handleIsValidDate = (values: {
 
   if (d.length === 8) {
     const isFutureDate =
-      dayjs(fD.slice(0, 10), 'DD/MM/YYYY', true).diff(dayjs()) > 0 ? true : false;
+      DateTime.fromFormat(fD.slice(0, 10), 'dd/MM/yyyy') >
+      DateTime.now().setLocale('pt-BR')
+        ? true
+        : false;
 
     return isFutureDate ? false : true;
   }

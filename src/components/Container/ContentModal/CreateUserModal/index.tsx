@@ -30,11 +30,10 @@ export default function CreateUserModal() {
     // values.cpf = parseInt(values.cpf);
 
     await registerPacient(values);
-    console.log(values);
 
     setVisible(false);
 
-    //form.resetFields();
+    form.resetFields();
 
     setLoading(false);
   };
