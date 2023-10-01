@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { Divider, Form as FormAnt, Input, InputNumber, Modal } from 'antd';
+import { Divider, Form as FormAnt, Input, Modal } from 'antd';
 import Button from '../../../Button';
 import { BiPlusCircle } from 'react-icons/bi';
 import { Container } from './styles';
 import { AddPacientForm } from '../../../../ts/Interfaces/AddPacientForm';
 import { usePacients } from '../../../../providers/Pacients/usePacients';
+import { PatternFormat } from 'react-number-format';
+import { handleIsValidDate } from '../../../../helpers/handleIsValidDate';
+import { validatorInputMasked } from '../../../../helpers/validatorInputMasked';
 
 export default function CreateUserModal() {
   const [visible, setVisible] = useState(false);
@@ -17,13 +20,22 @@ export default function CreateUserModal() {
   const onFinish = async (values: AddPacientForm) => {
     delete values.repassword;
     setLoading(true);
-    await registerPacient(values);
-    if (loading) {
-      //successfullyRegistered) {
-      setVisible(false);
 
-      form.resetFields();
-    }
+    values.cpf = values.cpf.replaceAll('.', '').replaceAll('-', '');
+    values.telefone = values.telefone
+      .replace('(', '')
+      .replace(')', '')
+      .replace('-', '');
+    // values.celular = parseInt(values.celular.slice(0, 10));
+    // values.cpf = parseInt(values.cpf);
+
+    await registerPacient(values);
+    console.log(values);
+
+    setVisible(false);
+
+    //form.resetFields();
+
     setLoading(false);
   };
   const showModal = () => {
@@ -32,8 +44,9 @@ export default function CreateUserModal() {
 
   const handleCancel = () => {
     setVisible(false);
-    form.resetFields();
+    //form.resetFields();
   };
+
   return (
     <div>
       <div className="icon-wrapper" onClick={showModal}>
@@ -66,11 +79,14 @@ export default function CreateUserModal() {
           >
             <FormAnt.Item
               name="nome"
-              hasFeedback
               rules={[
                 {
                   required: true,
                   message: 'Campo obrigatório!',
+                },
+                {
+                  min: 3,
+                  message: 'O campo conter 3 caracteres',
                 },
               ]}
             >
@@ -79,20 +95,24 @@ export default function CreateUserModal() {
 
             <FormAnt.Item
               name="cpf"
-              hasFeedback
               rules={[
                 {
-                  required: true,
-                  message: 'Campo obrigatório!',
+                  validator: validatorInputMasked,
                 },
               ]}
             >
-              <InputNumber placeholder="CPF" controls={false} style={{ width: '100%' }} />
+              <PatternFormat
+                placeholder="CPF"
+                format={'###.###.###-##'}
+                mask={'_'}
+                min={0}
+                style={{ width: '100%' }}
+                customInput={Input}
+              />
             </FormAnt.Item>
 
             <FormAnt.Item
               name="email"
-              hasFeedback
               rules={[
                 {
                   type: 'email',
@@ -108,23 +128,30 @@ export default function CreateUserModal() {
             </FormAnt.Item>
             <FormAnt.Item
               name="dataDeNascimento"
-              hasFeedback
+              rules={[
+                {
+                  validator: validatorInputMasked,
+                },
+              ]}
+            >
+              <PatternFormat
+                format="##/##/####"
+                mask={'_'}
+                placeholder="Data de nascimento"
+                isAllowed={handleIsValidDate}
+                customInput={Input}
+              />
+            </FormAnt.Item>
+            <FormAnt.Item
+              name="endereco"
               rules={[
                 {
                   required: true,
                   message: 'Campo obrigatório!',
                 },
-              ]}
-            >
-              <Input placeholder="Data de Nascimento" />
-            </FormAnt.Item>
-            <FormAnt.Item
-              name="endereco"
-              hasFeedback
-              rules={[
                 {
-                  required: true,
-                  message: 'Campo obrigatório!',
+                  min: 5,
+                  message: 'O campo conter 5 caracteres',
                 },
               ]}
             >
@@ -132,23 +159,21 @@ export default function CreateUserModal() {
             </FormAnt.Item>
             <FormAnt.Item
               name="telefone"
-              hasFeedback
               rules={[
                 {
-                  required: true,
-                  message: 'Campo obrigatório!',
+                  validator: validatorInputMasked,
                 },
               ]}
             >
-              <InputNumber
+              <PatternFormat
+                format={'(##)#####-####'}
+                mask={'_'}
                 placeholder="Telefone"
-                controls={false}
-                style={{ width: '100%' }}
+                customInput={Input}
               />
             </FormAnt.Item>
 
             <FormAnt.Item
-              hasFeedback
               name="password"
               rules={[
                 {
@@ -156,9 +181,8 @@ export default function CreateUserModal() {
                   message: 'Campo obrigatório!',
                 },
                 {
-                  type: 'string',
                   min: 6,
-                  message: 'A senha deve conter 6 caracteres',
+                  message: 'O campo conter 6 caracteres',
                 },
               ]}
             >
@@ -167,7 +191,6 @@ export default function CreateUserModal() {
             <FormAnt.Item
               name="repassword"
               dependencies={['password']}
-              hasFeedback
               rules={[
                 {
                   required: true,

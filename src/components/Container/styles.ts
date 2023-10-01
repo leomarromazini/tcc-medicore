@@ -45,6 +45,7 @@ export const PageContent = styled.div`
 
     span {
       font-weight: 600;
+      color: var(--text-color);
     }
 
     &:hover {
@@ -70,7 +71,6 @@ export const PageContent = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 10px;
       position: relative;
     }
 
@@ -94,6 +94,12 @@ export const PageContent = styled.div`
     .delete-icon-wrapper {
       svg {
         color: #e00312;
+        cursor: pointer;
+      }
+
+      .invisible {
+        cursor: default;
+        opacity: 0;
       }
     }
     .buttons-wrapper {
@@ -113,6 +119,7 @@ export const PageContent = styled.div`
   img {
     align-self: flex-end;
     width: 20%;
+    max-height: 240px;
     margin-top: 20px;
   }
 `;

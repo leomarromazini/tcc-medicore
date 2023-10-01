@@ -40,7 +40,9 @@ type customJwtPayload = JwtPayload & {
   exp: number;
 };
 
-export const DoctorContext = createContext<DoctorProviderData>({} as DoctorProviderData);
+export const DoctorContext = createContext<DoctorProviderData>(
+  {} as DoctorProviderData,
+);
 
 export const DoctorsProvider = ({ children }: AuthProviderProps) => {
   const [doctorToken, setDoctorToken] = useState(
@@ -78,7 +80,10 @@ export const DoctorsProvider = ({ children }: AuthProviderProps) => {
 
   const loginDoctor = async (data: LoginForm) => {
     try {
-      const result: AxiosResponse<LoginResponse> = await api.post('/authenticate', data);
+      const result: AxiosResponse<LoginResponse> = await api.post(
+        '/authenticate',
+        data,
+      );
 
       const rawDoctorToken = result.data.accessToken;
 

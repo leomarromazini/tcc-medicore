@@ -62,7 +62,7 @@ export const GlobalStyles = createGlobalStyle`
         display: block;
     }
 
-    p, span, h1, h2{
+    p, h1, h2{
       color: var(--text-color);
     }
 

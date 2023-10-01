@@ -1,6 +1,7 @@
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
+import { Pacient } from '../../../ts/Types/Pacient.type';
 
 type DataType = {
   key: React.Key;
@@ -9,18 +10,6 @@ type DataType = {
   email: string;
   dataDeNascimentoFormatted: string;
 };
-
-const users = [
-  {
-    key: '1',
-    nome: 'Isa Dutra',
-    cpf: 1123045617,
-    //"enderecoCompleto": "Rua do Paciente, 123",
-    email: 'isa@example.com',
-    dataDeNascimentoFormatted: '25/08/1992',
-    //"telefone": 987654321
-  },
-];
 
 const columns: ColumnsType<DataType> = [
   {
@@ -46,7 +35,11 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-export default function UsersTable() {
+interface Props {
+  pacients: Pacient[];
+}
+
+export default function UsersTable({ pacients }: Props) {
   const navigate = useNavigate();
   const handleUserDetails = (userName: string) => {
     navigate(`/medical-record/${userName}`);
@@ -56,14 +49,14 @@ export default function UsersTable() {
   return (
     <Table
       columns={columns}
-      dataSource={users}
+      dataSource={pacients}
       showSorterTooltip={false}
-      pagination={{ pageSize: pageSize, total: users.length }}
+      pagination={{ pageSize: pageSize, total: pacients.length }}
       style={{ cursor: 'pointer' }}
       onRow={(record) => {
         return {
           onClick: () => {
-            handleUserDetails(record.nome);
+            handleUserDetails(record?.nome);
           }, // click row
         };
       }}

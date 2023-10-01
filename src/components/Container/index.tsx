@@ -1,3 +1,4 @@
+import { Spin } from 'antd';
 import ContentHeader from './ContentHeader';
 import ContentModal from './ContentModal';
 import { PageContent, StyledContainer } from './styles';
@@ -7,6 +8,7 @@ interface Props {
   tittle: string;
   formVisible: boolean;
   setFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
   children: React.ReactNode;
 }
 
@@ -14,6 +16,7 @@ export default function Container({
   tittle,
   formVisible,
   setFormVisible,
+  loading,
   children,
 }: Props) {
   //const [formVisible, setFormVisible] = useState(false);
@@ -38,16 +41,17 @@ export default function Container({
   return (
     <StyledContainer>
       <h1>{tittle}</h1>
-
-      <PageContent>
-        <ContentHeader />
-        <ContentModal
-          formVisible={formVisible}
-          onViewForm={handleViewForm}
-          onGoBack={handleGoBack}
-        />
-        {children}
-      </PageContent>
+      <Spin spinning={loading} size="large">
+        <PageContent>
+          <ContentHeader />
+          <ContentModal
+            formVisible={formVisible}
+            onViewForm={handleViewForm}
+            onGoBack={handleGoBack}
+          />
+          {children}
+        </PageContent>
+      </Spin>
     </StyledContainer>
   );
 }

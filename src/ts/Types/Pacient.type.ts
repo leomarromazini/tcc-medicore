@@ -1,8 +1,9 @@
 export type Pacient = {
-  id: number;
-  nickName: string;
-  userName: string;
+  nome: string;
+  dataDeNascimentoFormatted: string;
   email: string;
-  emailConfirmed: boolean;
-  key: number;
+  enderecoCompleto: string;
+  cpf: number;
+  telefone: number;
+  key: React.Key;
 };
