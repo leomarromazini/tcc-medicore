@@ -28,13 +28,13 @@ export default function MedicalRecord() {
     try {
       const pacientMedicalrecord = await getPacientMedicalRecord(userName || '');
       console.log(pacientMedicalrecord);
-
+      await getAllPacients();
       setMedicalRecord(pacientMedicalrecord);
       setLoading(false);
     } catch {
       //
     }
-  }, [getPacientMedicalRecord, userName]);
+  }, [getPacientMedicalRecord, userName, getAllPacients]);
 
   useEffect(() => {
     void loadData();
