@@ -20,6 +20,7 @@ import { AddHospitalizationHistory } from '../../ts/Interfaces/AddHospitalizatio
 import { UpdateHospitalizationHistory } from '../../ts/Interfaces/UpdateHospitalizationHistory';
 import HospitalizationHistoryMapper from './mappers/HospitalizationHistoryMapper';
 import { formatDateToPersistence } from '../../utils/formatDateToPersistence';
+import { AddMedicalRecord } from '../../ts/Interfaces/AddMedicalRecord';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ interface PacientProviderData {
   getAllPacients: () => Promise<void>;
   updatePacient: (pacient: UpdatePacientForm) => Promise<void>;
   getPacientMedicalRecord: (name: string) => Promise<MedicalRecord | undefined>;
+  addMedicalRecord: (medicalRecord: AddMedicalRecord) => Promise<void>;
   updateMedicalRecord: (
     pacientName: string,
     medicalRecord: UpdateMedicalRecord,
@@ -128,19 +130,44 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
   const getPacientMedicalRecord = useCallback(
     async (name: string) => {
       try {
-        const result: AxiosResponse<MedicalRecord> = await api.get(
-          `/fichas-medicas/buscar-por-nome/${name}`,
-          headers,
-        );
+        if (headers.headers.Authorization.length > 10) {
+          const result: AxiosResponse<MedicalRecord> = await api.get(
+            `/fichas-medicas/buscar-por-nome/${name}`,
+            headers,
+          );
 
-        const medicalRecord = result.data;
+          const medicalRecord = result.data;
 
-        return medicalRecord;
+          return medicalRecord;
+        }
       } catch (e) {
         //
       }
     },
     [headers],
+  );
+
+  const addMedicalRecord = useCallback(
+    async (medicalRecord: AddMedicalRecord) => {
+      console.log(medicalRecord);
+
+      try {
+        await api.post(`/fichas-medicas/incluir`, medicalRecord, headers);
+        await getPacientMedicalRecord(medicalRecord.nome);
+        toast({
+          type: 'success',
+          tittle: 'Ficha médica criada',
+          description: 'Parabéns, Ficha médica criada com sucesso!',
+        });
+      } catch (e) {
+        toast({
+          type: 'error',
+          tittle: 'Erro ao criar ficha médica',
+          description: 'Verifique a conexão, campos e tente novamente',
+        });
+      }
+    },
+    [headers, getPacientMedicalRecord],
   );
 
   const updateMedicalRecord = useCallback(
@@ -321,6 +348,7 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
         getAllPacients,
         updatePacient,
         getPacientMedicalRecord,
+        addMedicalRecord,
         updateMedicalRecord,
         getPacientMedicine,
         addPacientMedicine,

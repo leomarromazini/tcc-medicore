@@ -9,42 +9,62 @@ import { NumericFormat } from 'react-number-format';
 import { UpdateMedicalRecord } from '../../../../ts/Interfaces/UpdateMedicalRecord';
 import { usePacients } from '../../../../providers/Pacients/usePacients';
 import { useParams } from 'react-router-dom';
+import { Pacient } from '../../../../ts/Types/Pacient.type';
 
 interface Props {
   medicalRecord: MedicalRecord | undefined;
   setFormVisible: Dispatch<SetStateAction<boolean>>;
   setMedicalRecord: Dispatch<SetStateAction<MedicalRecord | undefined>>;
+  pacient: Pacient | undefined;
 }
 
 export default function MedicalRecordForm({
   medicalRecord,
-  setFormVisible,
   setMedicalRecord,
+  setFormVisible,
+  pacient,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [formChange, setFormChange] = useState(false);
 
-  const { updateMedicalRecord, getPacientMedicalRecord } = usePacients();
-  const { userName } = useParams();
+  const { updateMedicalRecord, addMedicalRecord, getPacientMedicalRecord } =
+    usePacients();
+  const userName = useParams().userName || '';
 
   const handleUpdateMedicalRecords = async (form: UpdateMedicalRecordForm) => {
     setLoading(true);
 
-    const medicalRecord: UpdateMedicalRecord = {
-      nome: form.nome,
-      dataDeNascimento: form.dataDeNascimento,
+    const medicalRecordForm: UpdateMedicalRecord = {
+      nome: userName,
+      dataDeNascimento: pacient?.dataDeNascimentoFormatted || '',
       sexo: form.sexo,
-      peso: form.peso,
-      altura: form.altura,
+      peso: parseFloat(form.peso),
+      altura: parseFloat(form.altura),
       problemasDeSaude: {
-        doencasCronicas: form.doencasCongenitas.split(', '),
         doencasCongenitas: form.doencasCronicas.split(', '),
+        doencasCronicas: form.doencasCongenitas.split(', '),
       },
       alergias: form.alergias,
     };
-    await updateMedicalRecord(userName || '', medicalRecord);
+    console.log(medicalRecord, 'record');
 
-    const newMedicalRecord = await getPacientMedicalRecord(userName || '');
+    if (medicalRecord?.peso) {
+      console.log('oi');
+      try {
+        await updateMedicalRecord(userName, medicalRecordForm);
+      } catch {
+        //
+      }
+    } else {
+      try {
+        await addMedicalRecord(medicalRecordForm);
+      } catch {
+        //
+      }
+    }
+
+    const newMedicalRecord = await getPacientMedicalRecord(userName);
+    console.log(medicalRecord, 'record');
     setMedicalRecord(newMedicalRecord);
 
     setLoading(false);

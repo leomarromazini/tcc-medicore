@@ -27,6 +27,7 @@ export default function Form({
         medicalRecord={medicalRecord}
         setFormVisible={setFormVisible}
         setMedicalRecord={setMedicalRecord}
+        pacient={pacient}
       />
     </main>
   );

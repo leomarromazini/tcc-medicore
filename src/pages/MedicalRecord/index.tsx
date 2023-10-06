@@ -26,14 +26,15 @@ export default function MedicalRecord() {
 
   const loadData = useCallback(async () => {
     try {
-      await getAllPacients();
       const pacientMedicalrecord = await getPacientMedicalRecord(userName || '');
+      console.log(pacientMedicalrecord);
+
       setMedicalRecord(pacientMedicalrecord);
       setLoading(false);
     } catch {
       //
     }
-  }, [getAllPacients, getPacientMedicalRecord, userName]);
+  }, [getPacientMedicalRecord, userName]);
 
   useEffect(() => {
     void loadData();

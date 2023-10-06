@@ -2,8 +2,8 @@ export interface UpdateMedicalRecordForm {
   nome: string;
   dataDeNascimento: string;
   sexo: string;
-  peso: number;
-  altura: number;
+  peso: string;
+  altura: string;
   doencasCronicas: string;
   doencasCongenitas: string;
   alergias: string;
