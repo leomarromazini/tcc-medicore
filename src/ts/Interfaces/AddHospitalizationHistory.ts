@@ -1,6 +1,6 @@
 export interface AddHospitalizationHistory {
   pacienteNome: string;
   motivoInternacao: string;
-  dataEntrada: string;
+  dataEntrada?: string;
   dataSaida: string;
 }

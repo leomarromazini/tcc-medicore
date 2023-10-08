@@ -10,6 +10,7 @@ class HospitalizationHistoryMapper {
       ),
       dataSaida: HospitalizationHistoryMapper.formatDateToPersistence(
         addHospHistory.dataSaida,
+        true,
       ),
       motivoInternacao: addHospHistory.motivoInternacao,
     };
@@ -37,8 +38,17 @@ class HospitalizationHistoryMapper {
     });
   }
 
-  private static formatDateToPersistence(dateStr: string): string {
+  private static formatDateToPersistence(
+    dateStr: string | undefined,
+    isDischargeDate = false,
+  ): string {
+    if (!dateStr) {
+      return '';
+    }
     const [day, month, year] = dateStr.split('/');
+    if (isDischargeDate) {
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')} 00:30:00`;
+    }
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')} 00:00:00`;
   }
 }

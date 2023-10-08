@@ -1,7 +1,8 @@
 export interface UpdateMedicine {
   id: number;
   nomePaciente: string;
-  nomeMedicamento: string;
+  novoNomeMedicamento: string;
+  nomeMedicamentoAntigo: string;
   quantidade: number;
   dataPrescricao: string;
 }

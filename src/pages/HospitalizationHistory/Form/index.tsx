@@ -66,18 +66,35 @@ export default function Form({
       if (toBeUpdatedItems.length) {
         for (let i = 0; i < toBeUpdatedItems.length; i++) {
           const id = toBeUpdatedItems[i].id;
-          await updateHospitalizationHistory(
-            toBeUpdatedItems[i].dataEntradaInternacao,
-            {
-              pacienteNome: userName,
-              motivoInternacao:
-                f[`motivoInternacao-${id}`] || toBeUpdatedItems[i].motivoInternacao,
-              dataEntrada:
-                f[`dataEntrada-${id}`] || toBeUpdatedItems[i].dataEntradaInternacao,
-              dataSaida:
-                f[`dataSaida-${id}`] || toBeUpdatedItems[i].dataSaidaInternacao,
-            },
-          );
+
+          if (toBeUpdatedItems[i].dataEntradaInternacao === f[`dataEntrada-${id}`]) {
+            await updateHospitalizationHistory(
+              toBeUpdatedItems[i].dataEntradaInternacao,
+              {
+                pacienteNome: userName,
+                motivoInternacao:
+                  f[`motivoInternacao-${id}`] ||
+                  toBeUpdatedItems[i].motivoInternacao,
+                dataSaida:
+                  f[`dataSaida-${id}`] || toBeUpdatedItems[i].dataSaidaInternacao,
+              },
+            );
+          } else {
+            await updateHospitalizationHistory(
+              toBeUpdatedItems[i].dataEntradaInternacao,
+              {
+                pacienteNome: userName,
+                motivoInternacao:
+                  f[`motivoInternacao-${id}`] ||
+                  toBeUpdatedItems[i].motivoInternacao,
+                dataEntrada:
+                  f[`dataEntrada-${id}`] ||
+                  toBeUpdatedItems[i].dataEntradaInternacao,
+                dataSaida:
+                  f[`dataSaida-${id}`] || toBeUpdatedItems[i].dataSaidaInternacao,
+              },
+            );
+          }
         }
         toast({
           type: 'success',
@@ -86,11 +103,19 @@ export default function Form({
         });
       }
     } catch (e) {
-      toast({
-        type: 'error',
-        tittle: 'Erro ao atualizar histórico',
-        description: 'Já existe uma internação registrada nessa data!',
-      });
+      if (e === 'duplicateEntryDate') {
+        toast({
+          type: 'error',
+          tittle: 'Erro ao atualizar histórico',
+          description: 'Já existe uma internação registrada nessa data!',
+        });
+      } else {
+        toast({
+          type: 'error',
+          tittle: 'Algo deu errado!',
+          description: 'Tente novamente por favor!',
+        });
+      }
     }
     try {
       if (f['novaDataEntrada-0']) {
@@ -113,19 +138,27 @@ export default function Form({
         });
       }
     } catch (e) {
-      toast({
-        type: 'error',
-        tittle: 'Erro ao adicionar internação!',
-        description: 'Já existe uma internação registrada nessa data!',
-      });
+      if (e === 'duplicateEntryDate') {
+        toast({
+          type: 'error',
+          tittle: 'Erro ao adicionar internação!',
+          description: 'Já existe uma internação registrada nessa data!',
+        });
+      } else {
+        toast({
+          type: 'error',
+          tittle: 'Algo deu errado!',
+          description: 'Tente novamente por favor!',
+        });
+      }
     }
     const updatedHospHistory = await getHospitalizationHistory(userName);
     if (updatedHospHistory) {
       setHospitalizationHistory(updatedHospHistory);
     }
 
+    form.resetFields();
     setLoading(false);
-
     setFormVisible(false);
   };
 

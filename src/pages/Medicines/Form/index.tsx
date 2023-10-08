@@ -51,21 +51,42 @@ export default function Form({ medicines, setFormVisible, setMedicines }: Props)
       setLoading(false);
       return;
     }
-
-    for (let i = 0; i < toBeUpdatedItems.length; i++) {
-      const id = toBeUpdatedItems[i].id;
-      await updatePacientMedicine({
-        id: id,
-        nomePaciente: userName,
-        nomeMedicamento:
-          f[`nomeMedicamento-${id}`] || toBeUpdatedItems[i].nomeMedicamento,
-        quantidade:
-          parseFloat(f[`quantidade-${id}`]) || toBeUpdatedItems[i].quantidade,
-        dataPrescricao:
-          f[`dataPrescricao-${id}`] || toBeUpdatedItems[i].dataPrescricao,
-      });
+    if (toBeUpdatedItems.length) {
+      try {
+        for (let i = 0; i < toBeUpdatedItems.length; i++) {
+          const id = toBeUpdatedItems[i].id;
+          await updatePacientMedicine({
+            id: id,
+            nomePaciente: userName,
+            nomeMedicamentoAntigo: toBeUpdatedItems[i].nomeMedicamento,
+            novoNomeMedicamento: f[`nomeMedicamento-${id}`],
+            quantidade:
+              parseFloat(f[`quantidade-${id}`]) || toBeUpdatedItems[i].quantidade,
+            dataPrescricao:
+              f[`dataPrescricao-${id}`] || toBeUpdatedItems[i].dataPrescricao,
+          });
+        }
+        toast({
+          type: 'success',
+          tittle: 'Medicamentos atualizados',
+          description: 'Parabéns, medicamentos atualizados com sucesso!',
+        });
+      } catch (e) {
+        if (e === 'duplicateEntryMedicine') {
+          toast({
+            type: 'error',
+            tittle: 'Erro ao atualizar medicamento!',
+            description: 'Já existe um medicamento registrado com esse nome!',
+          });
+        } else {
+          toast({
+            type: 'error',
+            tittle: 'Algo deu errado!',
+            description: 'Tente novamente por favor!',
+          });
+        }
+      }
     }
-
     if (f['novoNomeMedicamento-0']) {
       const newMedicines: NewMedicine[] = [];
       for (let i = 0; ; i++) {
@@ -80,19 +101,37 @@ export default function Form({ medicines, setFormVisible, setMedicines }: Props)
         }
       }
 
-      await addPacientMedicine({ nome: userName, prescricoes: newMedicines });
+      try {
+        await addPacientMedicine({ nome: userName, prescricoes: newMedicines });
+
+        toast({
+          type: 'success',
+          tittle: 'Medicamentos adicionados',
+          description: 'Parabéns, medicamentos adicionados com sucesso!',
+        });
+      } catch (e) {
+        if (e === 'duplicateEntryMedicine') {
+          toast({
+            type: 'error',
+            tittle: 'Erro ao adicionar medicamento!',
+            description: 'Já existe um medicamento registrado com esse nome!',
+          });
+        } else {
+          toast({
+            type: 'error',
+            tittle: 'Algo deu errado!',
+            description: 'Tente novamente por favor!',
+          });
+        }
+      }
     }
     const updatedMedicines = await getPacientMedicine(userName);
     if (updatedMedicines) {
       setMedicines(updatedMedicines.listaPrescricao);
     }
 
+    form.resetFields();
     setLoading(false);
-    toast({
-      type: 'success',
-      tittle: 'Medicamentos atualizados',
-      description: 'Parabéns, medicamentos atualizados com sucesso!',
-    });
     setFormVisible(false);
   };
 

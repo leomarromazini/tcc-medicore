@@ -27,7 +27,7 @@ interface AuthProviderProps {
 }
 
 interface PacientProviderData {
-  registerPacient: (data: AddPacientForm) => Promise<boolean>;
+  registerPacient: (data: AddPacientForm) => Promise<void>;
   getAllPacients: () => Promise<void>;
   updatePacient: (pacient: UpdatePacientForm) => Promise<void>;
   getPacientMedicalRecord: (name: string) => Promise<MedicalRecord | undefined>;
@@ -74,14 +74,15 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
       });
 
       await getAllPacients();
-      return true;
+
+      return Promise.resolve();
     } catch {
       toast({
         type: 'error',
         tittle: 'Erro ao criar conta',
-        description: 'Verifique a conexão, campos e tente novamente',
+        description: 'Email e nome devem ser únicos',
       });
-      return false;
+      return Promise.reject('');
     }
   };
 
@@ -109,7 +110,7 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
   const updatePacient = useCallback(
     async (pacient: UpdatePacientForm) => {
       try {
-        await api.put('/paciente/atualizar', pacient, headers);
+        await api.put(`/paciente/atualizar?nome=${pacient.nome}`, pacient, headers);
         await getAllPacients();
         toast({
           type: 'success',
@@ -149,8 +150,6 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
 
   const addMedicalRecord = useCallback(
     async (medicalRecord: AddMedicalRecord) => {
-      console.log(medicalRecord);
-
       try {
         await api.post(`/fichas-medicas/incluir`, medicalRecord, headers);
         await getPacientMedicalRecord(medicalRecord.nome);
@@ -214,8 +213,13 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
     async (newMedicines: AddMedicines) => {
       try {
         await api.post(`/medicamentos/salvar`, newMedicines, headers);
+        return Promise.resolve();
       } catch (e) {
-        //
+        if (axios.isAxiosError(e)) {
+          if (e.code === 'ERR_BAD_REQUEST') {
+            return Promise.reject('duplicateEntryMedicine');
+          }
+        }
       }
     },
     [headers],
@@ -225,14 +229,17 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
     async (v: UpdateMedicine) => {
       try {
         await api.put(
-          `/medicamentos/atualizarPorId?id=${v.id.toString()}&nomePaciente=${
-            v.nomePaciente
-          }&novoNomeMedicamento=${v.nomeMedicamento}&novaQuantidade=${v.quantidade}`,
+          `/medicamentos/atualizar?nomePaciente=${v.nomePaciente}&nomeMedicamentoAntigo=${v.nomeMedicamentoAntigo}&novoNomeMedicamento=${v.novoNomeMedicamento}&novaQuantidade=${v.quantidade}`,
           {},
           headers,
         );
+        return Promise.resolve();
       } catch (e) {
-        //
+        if (axios.isAxiosError(e)) {
+          if (e.code === 'ERR_BAD_REQUEST') {
+            return Promise.reject('duplicateEntryMedicine');
+          }
+        }
       }
     },
     [headers],
@@ -296,7 +303,10 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
   const updateHospitalizationHistory = useCallback(
     async (oldAdmissionDate: string, h: UpdateHospitalizationHistory) => {
       const toPersistence = HospitalizationHistoryMapper.toPersistence(h);
+
       const formatedDate = formatDateToPersistence(oldAdmissionDate);
+      console.log(formatedDate, toPersistence);
+
       try {
         await api.put(
           `/internacao/atualizar?nomePaciente=${h.pacienteNome}&dataEntrada=${formatedDate}`,

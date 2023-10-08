@@ -28,12 +28,14 @@ export default function CreateUserModal() {
       .replace('-', '');
     // values.celular = parseInt(values.celular.slice(0, 10));
     // values.cpf = parseInt(values.cpf);
+    try {
+      await registerPacient(values);
+      setVisible(false);
 
-    await registerPacient(values);
-
-    setVisible(false);
-
-    form.resetFields();
+      form.resetFields();
+    } catch {
+      //
+    }
 
     setLoading(false);
   };

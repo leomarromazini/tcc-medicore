@@ -46,28 +46,19 @@ export default function MedicalRecordForm({
       },
       alergias: form.alergias,
     };
-    console.log(medicalRecord, 'record');
 
     if (medicalRecord?.peso) {
-      console.log('oi');
-      try {
-        await updateMedicalRecord(userName, medicalRecordForm);
-      } catch {
-        //
-      }
+      await updateMedicalRecord(userName, medicalRecordForm);
     } else {
-      try {
-        await addMedicalRecord(medicalRecordForm);
-      } catch {
-        //
-      }
+      await addMedicalRecord(medicalRecordForm);
     }
 
     const newMedicalRecord = await getPacientMedicalRecord(userName);
-    console.log(medicalRecord, 'record');
+
     setMedicalRecord(newMedicalRecord);
 
     setLoading(false);
+    setFormVisible(false);
   };
   const [form] = Form.useForm();
   return (

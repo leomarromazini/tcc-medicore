@@ -9,6 +9,7 @@ import { validatorInputMasked } from '../../../../helpers/validatorInputMasked';
 import { UpdatePacientForm } from '../../../../ts/Interfaces/UpdatePacientForm';
 import SubmitButton from '../../../../components/SubmitButton';
 import { usePacients } from '../../../../providers/Pacients/usePacients';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   pacient: Pacient | undefined;
@@ -20,6 +21,7 @@ export default function GeneralInfo({ pacient, setFormVisible }: Props) {
   const [formChange, setFormChange] = useState(false);
 
   const { updatePacient } = usePacients();
+  const userName = useParams().userName || '';
 
   const handleUpdateGeneralInfo = async (values: UpdatePacientForm) => {
     setLoading(true);
@@ -29,7 +31,7 @@ export default function GeneralInfo({ pacient, setFormVisible }: Props) {
       .replace('(', '')
       .replace(')', '')
       .replace('-', '');
-
+    values.nome = userName;
     await updatePacient(values);
 
     setLoading(false);
@@ -48,14 +50,7 @@ export default function GeneralInfo({ pacient, setFormVisible }: Props) {
       <div className="row-wrapper">
         <div className="cell-wrapper">
           <span className="tittle">Nome</span>
-          <Form.Item
-            hasFeedback
-            initialValue={pacient?.nome}
-            name="nome"
-            rules={[{ required: true, message: 'Campo obrigatório!' }]}
-          >
-            <Input />
-          </Form.Item>
+          <span className="data">{pacient?.nome}</span>
         </div>
         <div className="cell-wrapper">
           <span className="tittle">E-mail</span>
