@@ -66,35 +66,22 @@ export default function Form({
       if (toBeUpdatedItems.length) {
         for (let i = 0; i < toBeUpdatedItems.length; i++) {
           const id = toBeUpdatedItems[i].id;
+          console.log(
+            toBeUpdatedItems[i].dataEntradaInternacao === f[`dataEntrada-${id}`],
+          );
 
-          if (toBeUpdatedItems[i].dataEntradaInternacao === f[`dataEntrada-${id}`]) {
-            await updateHospitalizationHistory(
-              toBeUpdatedItems[i].dataEntradaInternacao,
-              {
-                pacienteNome: userName,
-                motivoInternacao:
-                  f[`motivoInternacao-${id}`] ||
-                  toBeUpdatedItems[i].motivoInternacao,
-                dataSaida:
-                  f[`dataSaida-${id}`] || toBeUpdatedItems[i].dataSaidaInternacao,
-              },
-            );
-          } else {
-            await updateHospitalizationHistory(
-              toBeUpdatedItems[i].dataEntradaInternacao,
-              {
-                pacienteNome: userName,
-                motivoInternacao:
-                  f[`motivoInternacao-${id}`] ||
-                  toBeUpdatedItems[i].motivoInternacao,
-                dataEntrada:
-                  f[`dataEntrada-${id}`] ||
-                  toBeUpdatedItems[i].dataEntradaInternacao,
-                dataSaida:
-                  f[`dataSaida-${id}`] || toBeUpdatedItems[i].dataSaidaInternacao,
-              },
-            );
-          }
+          await updateHospitalizationHistory(
+            toBeUpdatedItems[i].dataEntradaInternacao,
+            {
+              pacienteNome: userName,
+              motivoInternacao: f[`motivoInternacao-${id}`],
+              dataEntrada:
+                toBeUpdatedItems[i].dataEntradaInternacao === f[`dataEntrada-${id}`]
+                  ? ''
+                  : f[`dataEntrada-${id}`],
+              dataSaida: f[`dataSaida-${id}`],
+            },
+          );
         }
         toast({
           type: 'success',

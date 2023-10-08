@@ -302,9 +302,12 @@ export const PacientsProvider = ({ children }: AuthProviderProps) => {
 
   const updateHospitalizationHistory = useCallback(
     async (oldAdmissionDate: string, h: UpdateHospitalizationHistory) => {
+      console.log('oi', h);
+
       const toPersistence = HospitalizationHistoryMapper.toPersistence(h);
 
       const formatedDate = formatDateToPersistence(oldAdmissionDate);
+
       console.log(formatedDate, toPersistence);
 
       try {
