@@ -41,8 +41,8 @@ export default function MedicalRecordForm({
       peso: parseFloat(form.peso),
       altura: parseFloat(form.altura),
       problemasDeSaude: {
-        doencasCongenitas: form.doencasCronicas.split(', '),
-        doencasCronicas: form.doencasCongenitas.split(', '),
+        doencasCongenitas: form.doencasCongenitas.split(', '),
+        doencasCronicas: form.doencasCronicas.split(', '),
       },
       alergias: form.alergias,
     };
