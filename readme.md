@@ -1,7 +1,7 @@
 # Medicore
 
-"Medicore é um website desenvolvido como parte do projeto prático de conclusão de curso da pós-graduação em Engenharia de Software da PUC-Minas.
-Este projeto visa criar uma prova de conceito de um sistema destinado a médicos que atuam em clínicas e outros ambientes de assistência à saúde, com o objetivo de aprimorar e agilizar suas atividades diárias."
+Medicore é um website desenvolvido como parte do projeto prático de conclusão de curso da pós-graduação em Engenharia de Software da PUC-Minas.
+Este projeto visa criar uma prova de conceito de um sistema destinado a médicos que atuam em clínicas e outros ambientes de assistência à saúde, com o objetivo de aprimorar e agilizar suas atividades diárias.
 
 ### Link do repositório:
 
